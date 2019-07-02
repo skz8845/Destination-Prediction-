@@ -1,0 +1,35 @@
+首先打开VMware，开启3台虚拟机并以用户hadoop进入系统
+
+使用secureCRT软件连接这3台虚拟机
+
+zkServer.sh start #启动zookeeper服务
+
+start-all.sh #启动hadoop集群
+
+设置spark.yarn.jars
+spark.yarn.jars=hdfs:///spark/jars/*.jar
+
+hadoop fs -mkdir -p /spark/jars
+hadoop fs -put spark/jars/*.jar /spark/jars/
+
+上传训练集和测试集到虚拟机：
+put test_7_day.csv train_7_day.csv
+
+hadoop fs -mkdir /data
+hadoop fs -put *.csv /data
+
+编译spark程序并使用maven打成jar包上传至虚拟机：
+put SparkOdsCreator-1.0-SNAPSHOT.jar
+
+使用以下脚本向yarn提交spark任务：
+for a in `echo "knn5 knn2 bayes2" | tr ' ' '\n'`
+do
+        echo "$a is running!"
+        for k in `echo "5 10 20" | tr ' ' '\n'`
+        do
+                spark-submit --master yarn --executor-memory 3g --driver-memory 2g --class $a --deploy-mode client ~/SparkOdsCreator-1.0-SNAPSHOT.jar $k "hdfs:///data/train_7_day.csv" "hdfs:///data/test_7_day.csv"
+        done
+done
+
+使用python读取处理过后的结果：
+python calc_score.py

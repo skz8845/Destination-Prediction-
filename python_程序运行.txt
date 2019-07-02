@@ -1,0 +1,13 @@
+首先使用pip命令安装相关模块：
+pip install pandas
+pip install sklearn
+pip install geohash
+
+依赖安装完毕后，使用以下命令运行数据集切分：
+python split.py
+
+使用以下命令运行k近邻算法：
+python knn.py
+
+运行结束后会生成结果csv文件，运行以下命令计算平均误差距离和最终得分score：
+python calc_dis.py
