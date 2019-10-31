@@ -10,7 +10,7 @@
 
     <properties>
         <scala.version>2.11.8</scala.version>
-        <spark.version>2.3.0</spark.version>
+        <spark.version>2.4.4</spark.version>
         <hadoop.version>2.7.2</hadoop.version>
     </properties>
     <dependencies>
